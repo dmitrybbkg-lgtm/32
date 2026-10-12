@@ -50,7 +50,7 @@ function canNext(step){
   var p=S.p;
   if(step==="persona"){
     var nieOk=/^[XYZ]\d{7}[A-Z]$/.test((p.nie1+p.nie2+p.nie3).toUpperCase());
-    var dateOk=(+p.dd>=1&&+p.dd<=31&&+p.mm>=1&&+p.mm<=12&&p.yyyy.length===4);
+    var dd=+p.dd,mm=+p.mm,yy=+p.yyyy,dt=new Date(yy,mm-1,dd);var dateOk=(p.yyyy.length===4&&yy>=1900&&dt<=new Date()&&dt.getFullYear()===yy&&dt.getMonth()===mm-1&&dt.getDate()===dd);
     return !!(p.ap1 && p.nombre && dateOk && p.nac && p.sexo>=0 && p.ec>=0 && (p.pasaporte || nieOk));
   }
   if(step==="domicilio") return !!(p.dom && p.loc);
@@ -211,7 +211,7 @@ function renderStep(step){
       ])
     ]));
     box.appendChild(Card(T("Контакты"),[
-      Inp({label:T("Мобильный (Teléfono móvil)"),val:p.tel,set:function(v){p.tel=v;},ph:"+34 600 000 000",type:"num",max:20}),
+      Inp({label:T("Мобильный (Teléfono móvil)"),val:p.tel,set:function(v){p.tel=v;},ph:"+34 600 000 000",type:"tel",max:20}),
       Inp({label:"E-mail",val:p.email,set:function(v){p.email=v;},ph:"correo@email.com",type:"email"})
     ]));
     return box;
@@ -235,7 +235,7 @@ function renderStep(step){
           el("div",{style:"flex:1"},[Inp({label:"C.P.",val:S.filer.cp,set:function(v){S.filer.cp=v;},ph:"28013",max:5,type:"num"})]),
           el("div",{style:"flex:1.6"},[Inp({label:T("Провинция"),val:S.filer.prov,set:function(v){S.filer.prov=v;},ph:"MADRID"})])
         ]),
-        Inp({label:T("Телефон"),val:S.filer.tel,set:function(v){S.filer.tel=v;},ph:"+34 600 000 000",type:"num",max:20}),
+        Inp({label:T("Телефон"),val:S.filer.tel,set:function(v){S.filer.tel=v;},ph:"+34 600 000 000",type:"tel",max:20}),
         Inp({label:"E-mail",val:S.filer.email,set:function(v){S.filer.email=v;},ph:"correo@email.com",type:"email"})
       ]));
     }
@@ -264,7 +264,7 @@ function renderStep(step){
           el("div",{style:"flex:1"},[Inp({label:"C.P.",val:S.notif.cp,set:function(v){S.notif.cp=v;},ph:"28013",max:5,type:"num"})]),
           el("div",{style:"flex:1.6"},[Inp({label:T("Провинция"),val:S.notif.prov,set:function(v){S.notif.prov=v;},ph:"MADRID"})])
         ]),
-        Inp({label:T("Телефон"),val:S.notif.tel,set:function(v){S.notif.tel=v;},ph:"+34 600 000 000",type:"num",max:20}),
+        Inp({label:T("Телефон"),val:S.notif.tel,set:function(v){S.notif.tel=v;},ph:"+34 600 000 000",type:"tel",max:20}),
         Inp({label:"E-mail",val:S.notif.email,set:function(v){S.notif.email=v;},ph:"correo@email.com",type:"email"})
       ]));
     }
