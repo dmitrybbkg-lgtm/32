@@ -82,6 +82,16 @@ function el(tag,attrs,kids){
   });
   return e;
 }
+var TR_COMMON={"А":"A","Б":"B","В":"V","Д":"D","Е":"E","Ё":"E","Ж":"ZH","З":"Z","К":"K","Л":"L","М":"M","Н":"N","О":"O","П":"P","Р":"R","С":"S","Т":"T","У":"U","Ф":"F","Х":"KH","Ц":"TS","Ч":"CH","Ш":"SH","Щ":"SHCH","Ъ":"IE","Ы":"Y","Ь":"","Э":"E","Ю":"IU","Я":"IA","Й":"I","Є":"IE","І":"I","Ї":"I","Ґ":"G","'":"","\u2019":""};
+function translit(v){
+  return (v||"").replace(/[\u0400-\u04FF\u2019]/g,function(ch){
+    var u=ch.toUpperCase();
+    if(u==="Г") return LANG==="uk"?"H":"G";
+    if(u==="И") return LANG==="uk"?"Y":"I";
+    var r=TR_COMMON[u];
+    return r===undefined?"":r;
+  });
+}
 function latin(v){ return (v||"").replace(/[^A-Za-z0-9ÑñÁÉÍÓÚÜáéíóúüºª .,\-\/@()]/g,"").toUpperCase(); }
 
 function Inp(o){
@@ -97,7 +107,7 @@ function Inp(o){
     if(o.type==="tel") v=v.replace(/[^0-9+\- ]/g,"");
     else if(o.type==="num") v=v.replace(/\D/g,"");
     else if(o.type==="email") v=v.toLowerCase().replace(/[^a-z0-9@._\-]/g,"");
-    else v=latin(v);
+    else v=latin(translit(v));
     if(o.max) v=v.slice(0,o.max);
     e.target.value=v; o.set(v);
     e.target.style.border="1.5px solid "+(v?N:"#D1D9E6");
@@ -162,6 +172,7 @@ function renderStep(step){
   if(step==="persona"){
     box.appendChild(header(T("Личные данные"),"1) Datos del extranjero/a"));
     box.appendChild(Info(T("Пишите латиницей, как в паспорте. Поля заполняются заглавными буквами автоматически.")));
+    box.appendChild(Info(T("Кириллица автоматически переводится в латиницу по правилам транслитерации загранпаспорта. Сверьте написание с паспортом и при необходимости исправьте вручную. Страну и гражданство лучше писать по-испански (RUSIA, RUSA, UCRANIA, UCRANIANA).")));
     box.appendChild(Card(T("Документ"),[
       Inp({label:T("Паспорт (Pasaporte)"),val:p.pasaporte,set:function(v){p.pasaporte=v;},ph:"AB1234567",max:20}),
       Inp({label:T("NIE, если уже есть"),val:p.nie1,set:function(v){p.nie1=v;},ph:"X",max:1,hint:T("Формат: буква, 7 цифр, буква. Если NIE нет, поле можно оставить пустым.")}),
